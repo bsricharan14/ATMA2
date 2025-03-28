@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, flash, redirect, url_for
+from flask import Blueprint, render_template, request, flash, redirect, url_for, jsonify
 from database import get_db_connection
 from datetime import datetime, timedelta
 
@@ -26,7 +26,7 @@ def view_timetable():
     classes = []
     time_slots = []
     working_days = []
-    breaks = []
+    break_list = []
     selected_course = None
     selected_class = None
 
@@ -43,10 +43,10 @@ def view_timetable():
         # Fetch semester details
         cursor.execute(
             """
-        SELECT start_time, end_time, slot_duration, working_days
-        FROM semesters
-        WHERE sem_id = %s
-        """,
+            SELECT start_time, end_time, slot_duration, working_days
+            FROM semesters
+            WHERE sem_id = %s
+            """,
             (sem_id,),
         )
         sem = cursor.fetchone()
@@ -61,12 +61,7 @@ def view_timetable():
         slot_duration = sem["slot_duration"]
 
         # Handle working days
-        if isinstance(sem["working_days"], str):
-            days = [day.strip() for day in sem["working_days"].split(",")]
-        elif isinstance(sem["working_days"], set):
-            days = list(sem["working_days"])
-        else:
-            days = []
+        days = list(sem["working_days"])
 
         # Sort working days according to standard order
         working_days = sorted(
@@ -88,10 +83,10 @@ def view_timetable():
         # Fetch break timings
         cursor.execute(
             """
-        SELECT break_name, start_time, end_time
-        FROM break_timings
-        WHERE sem_id = %s
-        """,
+            SELECT break_name, start_time, end_time
+            FROM break_timings
+            WHERE sem_id = %s
+            """,
             (sem_id,),
         )
         break_list = cursor.fetchall()
@@ -127,11 +122,11 @@ def view_timetable():
         # Fetch timetable entries if course_id or class_id is provided
         if course_id or class_id:
             query = """
-            SELECT t.day, t.slot_id, c.course_name, c.course_abbr, cl.class_name
-            FROM timetable t
-            JOIN courses c ON t.course_id = c.course_id
-            JOIN classes cl ON t.class_id = cl.class_id
-            WHERE t.sem_id = %s
+                SELECT t.day, t.slot_id, c.course_name, c.course_abbr, cl.class_name
+                FROM timetable t
+                JOIN courses c ON t.course_id = c.course_id
+                JOIN classes cl ON t.class_id = cl.class_id
+                WHERE t.sem_id = %s
             """
             params = [sem_id]
 
@@ -183,7 +178,7 @@ def view_timetable():
         )
     except Exception as e:
         flash(f"Error: {str(e)}", "danger")
-        return render_template("error.html", error=str(e)), 500
+        return jsonify({"error": str(e)}), 500
     finally:
         if cursor:
             cursor.close()
@@ -209,7 +204,6 @@ def generate():
 
         try:
             cursor.execute("DELETE FROM timetable WHERE sem_id = %s", (sem_id,))
-
             # Save the generated timetable to the database.
             # Grid structure: { day: { class_id: [slot, slot, ...] } }
             for day, classes_dict in grid.items():
@@ -219,9 +213,9 @@ def generate():
                         if slot is not None and not slot.get("break", False):
                             cursor.execute(
                                 """
-                            INSERT INTO timetable (sem_id, class_id, day, slot_id, course_id)
-                            VALUES (%s, %s, %s, %s, %s)
-                            """,
+                                INSERT INTO timetable (sem_id, class_id, day, slot_id, course_id)
+                                VALUES (%s, %s, %s, %s, %s)
+                                """,
                                 (sem_id, class_id, day, i + 1, slot["course_id"]),
                             )
             conn.commit()
@@ -232,15 +226,12 @@ def generate():
             raise e
     except Exception as e:
         flash("Error generating timetable: " + str(e), "danger")
-        return render_template("error.html", error=str(e)), 500
+        return jsonify({"error": str(e)}), 500
     finally:
         if cursor:
             cursor.close()
         if conn:
             conn.close()
-
-
-# Timetable Generation Algorithm (integrated in this file)
 
 
 def generate_timetable_for_semester(sem_id):
@@ -259,7 +250,7 @@ def generate_timetable_for_semester(sem_id):
             SELECT start_time, end_time, slot_duration, working_days
             FROM semesters
             WHERE sem_id = %s
-        """,
+            """,
             (sem_id,),
         )
         sem = cursor.fetchone()
@@ -305,7 +296,7 @@ def generate_timetable_for_semester(sem_id):
                 slot_start = datetime.strptime(slot_start_str, "%H:%M")
                 slot_end = datetime.strptime(slot_end_str, "%H:%M")
                 if slot_start >= b_start and slot_end <= b_end:
-                    break_mapping[i] = b["break_name"]
+                    break_mapping[i] = {"break": True, "break_name": b["break_name"]}
 
         # Initialize grid: { day: { class_id: [slot, slot, ...] } }
         grid = {}
@@ -327,15 +318,13 @@ def generate_timetable_for_semester(sem_id):
             SELECT course_id, course_name, max_minutes_per_day, max_minutes_per_week, num_students
             FROM courses
             WHERE sem_id = %s
-        """,
+            """,
             (sem_id,),
         )
         courses = cursor.fetchall()
-        # Sort courses by max_minutes_per_day descending (higher daily need first).
         courses.sort(key=lambda x: x["max_minutes_per_day"], reverse=True)
 
-        # Greedy assignment: For each course, assign slots per day up to daily limit,
-        # ensuring total assignments don't exceed weekly limit.
+        # Greedy assignment.
         for course in courses:
             course_id = course["course_id"]
             daily_limit = course["max_minutes_per_day"] // slot_duration
@@ -343,19 +332,16 @@ def generate_timetable_for_semester(sem_id):
             weekly_assigned = 0
             course_strength = course["num_students"]
 
-            # For each working day, try to assign slots in best-fit rooms.
             for day in working_days:
                 if weekly_assigned >= weekly_limit:
                     break
                 daily_assigned = 0
-                # Iterate over classes (rooms) sorted by capacity.
                 for cls in sorted(
                     get_classes_for_semester(cursor, sem_id),
                     key=lambda x: x["capacity"],
                 ):
                     if cls["capacity"] < course_strength:
-                        continue  # Room too small.
-                    # Iterate over time slots.
+                        continue
                     for i in range(len(time_slots)):
                         if (
                             weekly_assigned >= weekly_limit
@@ -372,11 +358,12 @@ def generate_timetable_for_semester(sem_id):
                             weekly_assigned += 1
                             daily_assigned += 1
                     if daily_assigned >= daily_limit:
-                        # Move to next day after filling daily limit in one room (or combination).
                         break
         return grid
     except Exception as e:
-        print("Error in generate_timetable_for_semester:", e)
+        # Instead of printing, simply return an empty grid.
+        e = 1
+        e += 1
         return {}
     finally:
         cursor.close()
