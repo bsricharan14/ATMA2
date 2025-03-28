@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Create New Semester</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/create_semester.css') }}"
+    />
+  </head>
+  <body>
+    <nav class="navbar">
+      <h1>Institution Timetable System</h1>
+      <ul>
+        <li><a href="{{ url_for('index.dashboard') }}">Dashboard</a></li>
+        <li>
+          <a href="{{ url_for('semester.manage_semesters') }}"
+            >Manage Semesters</a
+          >
+        </li>
+      </ul>
+    </nav>
+    <div class="content-container">
+      <div class="container">
+        <h1>Create New Semester</h1>
+        <form
+          action="{{ url_for('semester.create_semester') }}"
+          method="POST"
+          enctype="multipart/form-data"
+        >
+          <h2>Semester Details</h2>
+          <label for="sem_name">Semester Name:</label>
+          <input type="text" id="sem_name" name="sem_name" required />
+          <label for="start_time">Start Time:</label>
+          <input type="time" id="start_time" name="start_time" required />
+          <label for="end_time">End Time:</label>
+          <input type="time" id="end_time" name="end_time" required />
+          <label for="slot_duration">Slot Duration (minutes):</label>
+          <input
+            type="number"
+            id="slot_duration"
+            name="slot_duration"
+            min="1"
+            required
+          />
+          <fieldset>
+            <legend>Working Days:</legend>
+            <label
+              ><input type="checkbox" name="working_days" value="Monday" />
+              Monday</label
+            >
+            <label
+              ><input type="checkbox" name="working_days" value="Tuesday" />
+              Tuesday</label
+            >
+            <label
+              ><input type="checkbox" name="working_days" value="Wednesday" />
+              Wednesday</label
+            >
+            <label
+              ><input type="checkbox" name="working_days" value="Thursday" />
+              Thursday</label
+            >
+            <label
+              ><input type="checkbox" name="working_days" value="Friday" />
+              Friday</label
+            >
+            <label
+              ><input type="checkbox" name="working_days" value="Saturday" />
+              Saturday</label
+            >
+            <label
+              ><input type="checkbox" name="working_days" value="Sunday" />
+              Sunday</label
+            >
+          </fieldset>
+          <fieldset>
+            <legend>Break Timings (Optional)</legend>
+            <div id="break-input">
+              <label for="break_name_input">Break Name:</label>
+              <input
+                type="text"
+                id="break_name_input"
+                placeholder="Enter break name"
+              /><br />
+              <label for="break_start_input">Break Start:</label>
+              <input type="time" id="break_start_input" />
+              <label for="break_end_input">Break End:</label>
+              <input type="time" id="break_end_input" />
+              <button type="button" id="add_break_btn" class="btn">
+                Add Break
+              </button>
+            </div>
+          </fieldset>
+          <div id="hidden-break-inputs"></div>
+          <h3>Added Break Timings</h3>
+          <table id="break-table">
+            <thead>
+              <tr>
+                <th>Break Name</th>
+                <th>Start</th>
+                <th>End</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+          <button type="submit" class="btn">Save Semester Details</button>
+        </form>
+        {% if breaks %}
+        <div class="breaks-summary">
+          <h2>Saved Break Timings</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>Break Name</th>
+                <th>Start</th>
+                <th>End</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for br in breaks %}
+              <tr>
+                <td>{{ br['break_name'] }}</td>
+                <td>{{ br['start_time'] }}</td>
+                <td>{{ br['end_time'] }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          <a
+            href="{{ url_for('semester.add_classes', sem_id=sem_id) }}"
+            class="btn"
+            >Next: Add Classes</a
+          >
+        </div>
+        {% endif %}
+      </div>
+    </div>
+    <script src="{{ url_for('static', filename='js/create_semester.js') }}"></script>
+  </body>
+</html>

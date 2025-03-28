@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/dashboard.css') }}"
+    />
+  </head>
+  <body>
+    <nav class="navbar">
+      <h1>Institution Timetable System</h1>
+      <ul>
+        <li><a href="{{ url_for('index.home') }}">Home</a></li>
+        <li>
+          <a href="{{ url_for('semester.manage_semesters') }}"
+            >Manage Semesters</a
+          >
+        </li>
+        <li>
+          <a href="{{ url_for('semester.create_semester') }}"
+            >Create Semester</a
+          >
+        </li>
+      </ul>
+    </nav>
+    <div class="content-container">
+      <h2>Dashboard</h2>
+      <div class="card">
+        <p>Back to Home</p>
+        <a href="{{ url_for('index.home') }}" class="btn">Home</a>
+      </div>
+      <div class="card">
+        <p>Manage and generate timetables</p>
+        <a href="{{ url_for('semester.manage_semesters') }}" class="btn"
+          >Manage Semesters</a
+        >
+      </div>
+      <div class="card">
+        <p>Create a new semester</p>
+        <a href="{{ url_for('semester.create_semester') }}" class="btn"
+          >Create Semester</a
+        >
+      </div>
+    </div>
+  </body>
+</html>

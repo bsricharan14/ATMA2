@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Automatic Timetable Management System</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/index.css') }}"
+    />
+  </head>
+  <body>
+    <nav class="navbar">
+      <h1>Institution Timetable System</h1>
+      <ul>
+        <li><a href="{{ url_for('index.dashboard') }}">Dashboard</a></li>
+        <li>
+          <a href="{{ url_for('semester.manage_semesters') }}"
+            >Manage Semesters</a
+          >
+        </li>
+        <li>
+          <a href="{{ url_for('semester.create_semester') }}"
+            >Create Semester</a
+          >
+        </li>
+      </ul>
+    </nav>
+    <div class="content-container">
+      <div class="container">
+        <h2>Welcome to the Automatic Timetable Management System</h2>
+        <p>
+          This system helps institutions efficiently manage class schedules,
+          preventing conflicts and optimizing resources.
+        </p>
+        <a href="{{ url_for('index.dashboard') }}" class="btn">Get Started</a>
+      </div>
+    </div>
+  </body>
+</html>

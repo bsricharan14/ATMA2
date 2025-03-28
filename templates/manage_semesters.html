@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Manage Semesters</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/manage_semesters.css') }}"
+    />
+  </head>
+  <body>
+    <nav class="navbar">
+      <h1>Institution Timetable System</h1>
+      <ul>
+        <li><a href="{{ url_for('index.dashboard') }}">Dashboard</a></li>
+        <li>
+          <a href="{{ url_for('semester.create_semester') }}"
+            >Create Semester</a
+          >
+        </li>
+      </ul>
+    </nav>
+    <div class="content-container">
+      <h2>Manage Semesters</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Semester Name</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for sem in semesters %}
+          <tr>
+            <td>{{ sem.sem_name }}</td>
+            <td>
+              <span style="margin-right: 10px">
+                <a
+                  href="{{ url_for('timetable.view_timetable', sem_id=sem.sem_id) }}"
+                  class="btn"
+                  >View Timetable</a
+                >
+              </span>
+              <span style="margin-right: 10px">
+                <form
+                  action="{{ url_for('timetable.generate') }}"
+                  method="POST"
+                  style="display: inline"
+                >
+                  <input
+                    type="hidden"
+                    name="semester_id"
+                    value="{{ sem.sem_id }}"
+                  />
+                  <button type="submit" class="btn">Generate Timetable</button>
+                </form>
+              </span>
+              <span style="margin-right: 10px">
+                <form
+                  action="{{ url_for('semester.delete') }}"
+                  method="POST"
+                  style="display: inline"
+                >
+                  <input
+                    type="hidden"
+                    name="semester_id"
+                    value="{{ sem.sem_id }}"
+                  />
+                  <button type="submit" class="btn-red">Delete Sem</button>
+                </form>
+              </span>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </body>
+</html>

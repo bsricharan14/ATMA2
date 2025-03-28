@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>View Timetable</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/view_timetable.css') }}">
+</head>
+<body>
+  <nav class="navbar">
+    <h1>Institution Timetable System</h1>
+    <ul>
+      <li><a href="{{ url_for('index.dashboard') }}">Dashboard</a></li>
+      <li><a href="{{ url_for('semester.manage_semesters') }}">Manage Semesters</a></li>
+      <li><a href="{{ url_for('semester.create_semester') }}">Create Semester</a></li>
+    </ul>
+  </nav>
+
+  <div class="content-container">
+    <h2>View Timetable</h2>
+
+    <!-- Selection Section -->
+    <div id="view-selection">
+      <p>Select View Type:</p>
+      <label>
+        <input type="radio" name="viewType" value="class" checked> Room Wise
+      </label>
+      <label>
+        <input type="radio" name="viewType" value="course"> Course Wise
+      </label>
+      <input type="hidden" id="semesterId" value="{{ sem_id }}">
+      <br><br>
+
+      <!-- Room Selection -->
+      <div id="class-dropdown">
+        <label for="classSelect">Select Room:</label>
+        <select id="classSelect">
+          <option value="">-- Select Room --</option>
+          {% if classes %}
+            {% for class in classes %}
+              <option value="{{ class.class_id }}"
+                {% if request.args.get('class_id')|string == class.class_id|string %}selected{% endif %}>
+                {{ class.class_name }}
+              </option>
+            {% endfor %}
+          {% else %}
+            <option value="" disabled>No rooms available</option>
+          {% endif %}
+        </select>
+      </div>
+
+      <!-- Course Selection -->
+      <div id="course-dropdown" style="display:none;">
+        <label for="courseSelect">Select Course:</label>
+        <select id="courseSelect">
+          <option value="">-- Select Course --</option>
+          {% if courses %}
+            {% for course in courses %}
+              <option value="{{ course.course_id }}"
+                {% if request.args.get('course_id')|string == course.course_id|string %}selected{% endif %}>
+                {{ course.course_name }}
+              </option>
+            {% endfor %}
+          {% else %}
+            <option value="" disabled>No courses available</option>
+          {% endif %}
+        </select>
+      </div>
+
+      <button class="btn" onclick="fetchTimetable()">View Timetable</button>
+    </div>
+
+    <!-- Timetable Display -->
+    {% if request.args.get('course_id') or request.args.get('class_id') %}
+      <div id="timetable-display">
+        <h3 id="timetable-title">
+          {% if request.args.get('course_id') %}
+            Course Timetable for {{ selected_course.course_name if selected_course else '' }}
+          {% elif request.args.get('class_id') %}
+            Room Timetable for {{ selected_class.class_name if selected_class else '' }}
+          {% endif %}
+        </h3>
+
+        <table id="timetable-table">
+          <thead>
+            <tr>
+              <th>Day</th>
+              {% for slot in time_slots %}
+                <th>{{ slot }}</th>
+              {% endfor %}
+            </tr>
+          </thead>
+          <tbody>
+            {% for day in working_days %}
+              <tr>
+                <td>{{ day }}</td>
+                {% for cell in timetable[day] %}
+                  <td>
+                    {% if cell %}
+                      {% if cell.break %}
+                        <span class="break">{{ cell.break_name }}</span>
+                      {% elif request.args.get('course_id') %}
+                        {{ cell.room_name }}
+                      {% elif request.args.get('class_id') %}
+                        {{ cell.course_name }} ({{ cell.course_abbr }})
+                      {% endif %}
+                    {% endif %}
+                  </td>
+                {% endfor %}
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+
+        <div class="button-group">
+          <button class="btn" onclick="window.location.href='/timetable/view?sem_id={{ sem_id }}'">Back</button>
+          <button class="btn" onclick="downloadTimetable()">Download PDF</button>
+        </div>
+      </div>
+    {% endif %}
+  </div>
+
+  <script src="{{ url_for('static', filename='js/view_timetable.js') }}"></script>
+</body>
+</html>

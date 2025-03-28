@@ -1,0 +1,195 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto:400,500,700&display=swap');
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    background-color: #f8f9fa;
+    color: #333;
+}
+
+/* NAVBAR */
+.navbar {
+    background-color: #002147;
+    color: #fff;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    animation: slideDown 0.5s ease-out;
+}
+
+.navbar h1 {
+    margin: 0;
+    font-size: 24px;
+}
+
+.navbar ul {
+    list-style: none;
+    display: flex;
+    margin: 0;
+    padding: 0;
+}
+
+.navbar ul li {
+    margin-left: 20px;
+}
+
+.navbar ul li a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 16px;
+    transition: color 0.3s;
+}
+
+.navbar ul li a:hover {
+    color: #c0c0c0;
+}
+
+/* CONTENT CONTAINER */
+.content-container {
+    margin-top: 80px;
+    padding: 20px;
+}
+
+h2 {
+    color: #002147;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* TIMETABLE STYLING */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px auto;
+    background: #fff;
+    border: 1px solid #ccc;
+    animation: fadeIn 0.6s ease-out;
+}
+
+.break {
+    color: #666;
+    font-style: italic;
+    background-color: #f5f5f5;
+}
+
+th,
+td {
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: center;
+    font-size: 16px;
+}
+
+th {
+    background-color: #002147;
+    color: #fff;
+    font-weight: 500;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+/* BUTTON STYLES */
+.btn {
+    display: block;
+    margin: 20px auto;
+    background-color: #002147;
+    color: #fff;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.btn:hover {
+    background-color: #004080;
+    transform: scale(1.05);
+}
+
+/* TIMETABLE SELECTION STYLES */
+#view-selection {
+    margin: 20px auto;
+    padding: 20px;
+    text-align: center;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    animation: fadeIn 0.6s ease-out;
+}
+
+#view-selection p {
+    font-size: 18px;
+    margin-bottom: 15px;
+    color: #002147;
+}
+
+#view-selection label {
+    margin-right: 15px;
+    font-size: 16px;
+}
+
+.dropdown {
+    margin: 10px auto;
+    text-align: center;
+}
+
+.dropdown label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
+}
+
+.dropdown select {
+    padding: 8px 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+.dropdown select:focus {
+    border-color: #004080;
+}
+
+#timetable-display {
+    margin: 20px auto;
+    max-width: 1000px;
+}
+
+#timetable-title {
+    margin-bottom: 20px;
+    text-align: center;
+    color: #002147;
+    font-size: 20px;
+}
+
+
+@keyframes slideDown {
+    from {
+        transform: translateY(-100%);
+    }
+
+    to {
+        transform: translateY(0);
+    }
+}
