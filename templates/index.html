@@ -26,15 +26,79 @@
         </li>
       </ul>
     </nav>
+
     <div class="content-container">
       <div class="container">
         <h2>Welcome to the Automatic Timetable Management System</h2>
         <p>
           This system helps institutions efficiently manage class schedules,
-          preventing conflicts and optimizing resources.
+          prevent conflicts, and optimize resource utilization.
         </p>
         <a href="{{ url_for('index.dashboard') }}" class="btn">Get Started</a>
       </div>
     </div>
+
+    <div class="content-container">
+      <div class="card mt-4">
+        <div class="card-header">How To Use</div>
+        <div class="card-body">
+          <p>
+            <strong>Creating Semesters:</strong> Start by adding the semester
+            details. After creation, you will be prompted to add classes (rooms)
+            and courses. You can add these details manually or upload a CSV
+            file.
+            <br />
+            Note: Time values should be a multiple of the slot duration defined
+            during semester creation.
+            <br /><br />
+            <em>CSV Format:</em>
+            <br />
+            The CSV file should include a header row.
+            <br /><br />
+            <strong>Example CSV For Classes:</strong>
+            <br />
+            <code>
+              class_name,class_capacity<br />
+              Room A,120
+            </code>
+            <br /><br />
+            <strong>Example CSV For Courses:</strong>
+            <br />
+            <code>
+              course_name,num_students,max_minutes_per_week,max_minutes_per_day,min_minutes_per_day,course_abbr<br />
+              Math 101,30,180,60,60,MTH101
+            </code>
+          </p>
+          <p>
+            <strong>Managing Semesters:</strong>
+            <br />
+            Once your semester is created, it will appear in the management
+            list. You have options to view the timetable, generate a new
+            timetable, or delete the semester (which removes all related data).
+            <br />
+            <em>Note:</em> When you click on "View Timetable" immediately after
+            creating a semester, the timetable may not be visible because it has
+            not yet been generated. Make sure to click on "Generate Timetable"
+            to create the schedule before viewing.
+          </p>
+          <p>
+            <strong>Timetable Generation:</strong>
+            <br />
+            Click "Generate Timetable" to automatically create a conflict-free
+            schedule based on your defined classes, courses, and breaks. You
+            will then be redirected to the timetable view page.
+          </p>
+          <p>
+            <strong>View &amp; Filter:</strong>
+            <br />
+            On the timetable view page, filter the schedule by room or course to
+            examine specific details.
+          </p>
+        </div>
+      </div>
+      <!-- End How It Works Card -->
+    </div>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
   </body>
 </html>

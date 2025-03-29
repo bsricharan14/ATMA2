@@ -24,6 +24,14 @@
     <div class="content-container">
       <div class="container">
         <h2>Add Courses</h2>
+        <p>
+          <strong>
+            <i
+              >(values of time should be multiple of slot duration of the
+              semester)</i
+            >
+          </strong>
+        </p>
         <form
           action="{{ url_for('semester.add_courses', sem_id=sem_id) }}"
           method="POST"

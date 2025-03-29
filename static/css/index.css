@@ -1,106 +1,149 @@
-@import url('https://fonts.googleapis.com/css?family=Roboto:400,500,700&display=swap');
+/* Import Google Fonts */
+@import url("https://fonts.googleapis.com/css?family=Roboto:400,500,700&display=swap");
 
+/* Global Styles */
 * {
-    box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 body {
-    font-family: 'Roboto', sans-serif;
-    margin: 0;
-    background-color: #f8f9fa;
-    color: #333;
+  font-family: "Roboto", sans-serif;
+  margin: 0;
+  background-color: #f8f9fa;
+  color: #333;
+  line-height: 1.6;
 }
 
-/* Top Navigation Bar */
+/* Navigation Bar */
 .navbar {
-    background-color: #002147;
-    color: #fff;
-    padding: 15px 20px;
-    /* reduced horizontal padding */
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    position: fixed;
-    top: 0;
-    width: 100%;
-    z-index: 1000;
-    animation: slideDown 0.5s ease-out;
+  background-color: #002147;
+  color: #fff;
+  padding: 15px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+  animation: slideDown 0.5s ease-out;
 }
 
 .navbar h1 {
-    margin: 0;
-    font-size: 24px;
+  margin: 0;
+  font-size: 24px;
 }
 
 .navbar ul {
-    list-style: none;
-    display: flex;
-    margin: 0;
-    padding: 0;
+  list-style: none;
+  display: flex;
+  margin: 0;
+  padding: 0;
 }
 
 .navbar ul li {
-    margin-left: 20px;
+  margin-left: 20px;
 }
 
 .navbar ul li a {
-    color: #fff;
-    text-decoration: none;
-    font-size: 16px;
-    transition: color 0.3s;
+  color: #fff;
+  text-decoration: none;
+  font-size: 16px;
+  transition: color 0.3s;
 }
 
 .navbar ul li a:hover {
-    color: #c0c0c0;
+  color: #c0c0c0;
 }
 
 /* Content Container */
 .content-container {
-    margin-top: 80px;
-    padding: 20px;
+  margin-top: 80px;
+  padding: 20px;
 }
 
 /* Main Container */
 .container {
-    width: 90%;
-    max-width: 800px;
-    margin: 40px auto;
-    background: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    animation: fadeIn 0.6s ease-out;
-    text-align: center;
+  width: 90%;
+  max-width: 800px;
+  margin: 40px auto;
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  animation: fadeIn 0.6s ease-out;
+  text-align: center;
 }
 
-h2 {
-    color: #002147;
+/* Headings */
+h2,
+h3 {
+  color: #002147;
+  margin-bottom: 15px;
 }
 
+/* Button Styles */
 .btn {
-    background-color: #002147;
-    color: #fff;
-    padding: 12px 25px;
-    border: none;
-    border-radius: 5px;
-    text-decoration: none;
-    font-size: 16px;
-    cursor: pointer;
-    transition: background-color 0.3s, transform 0.2s;
+  background-color: #002147;
+  color: #fff;
+  padding: 12px 25px;
+  border: none;
+  border-radius: 5px;
+  text-decoration: none;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
 }
 
 .btn:hover {
-    background-color: #004080;
-    transform: scale(1.05);
+  background-color: #004080;
+  transform: scale(1.05);
 }
 
+/* Card Component for Functionality Explanation */
+.card {
+  background-color: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  margin-top: 20px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  text-align: left;
+}
 
+.card-header {
+  background-color: #002147;
+  color: #fff;
+  padding: 15px;
+  font-size: 20px;
+  font-weight: 500;
+}
+
+.card-body {
+  padding: 20px;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.card-body p {
+  margin-bottom: 15px;
+}
+
+/* Animations */
 @keyframes slideDown {
-    from {
-        transform: translateY(-100%);
-    }
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
 
-    to {
-        transform: translateY(0);
-    }
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
