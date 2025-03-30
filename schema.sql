@@ -1,4 +1,3 @@
--- schema.sql
 CREATE TABLE semesters (
     sem_id INT AUTO_INCREMENT PRIMARY KEY,
     sem_name VARCHAR(100) NOT NULL,
