@@ -46,4 +46,4 @@ jobs:
           mysql -h 127.0.0.1 -P 3306 -u root -p${{ secrets.MYSQL_ROOT_PASSWORD }} test_database < schema.sql
 
       - name: Run Unit Tests
-        run: python -m unittest discover tests/
+        run: python -m run_tests.py
