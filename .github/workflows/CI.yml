@@ -34,7 +34,7 @@ jobs:
             sleep 2
           done
       - run: mysql -h 127.0.0.1 -P 3306 -u root -p${{ secrets.MYSQL_ROOT_PASSWORD }} test_database < schema.sql
-      - run: python -m unittest discover tests/
+      - run: python run_tests.py
 
   lint:
     runs-on: ubuntu-latest
